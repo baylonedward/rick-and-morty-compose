@@ -1,6 +1,7 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.jetbrains.kotlin.android)
+  alias(libs.plugins.kotlin.plugin.serialization)
   alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
 }
@@ -37,6 +38,7 @@ android {
   }
   buildFeatures {
     compose = true
+    buildConfig = true
   }
   composeOptions {
     kotlinCompilerExtensionVersion = "1.5.3"
@@ -65,11 +67,12 @@ dependencies {
 
   // KTOR
   implementation(libs.ktor.client.core)
+  implementation(libs.ktor.client.content.negotiation)
   implementation(libs.ktor.client.okhttp)
   implementation(libs.ktor.client.logging.jvm)
   implementation(libs.ktor.client.serialization.jvm)
   implementation(libs.ktor.client.auth)
-  implementation(libs.kotlinx.serialization.json)
+  implementation(libs.ktor.serialization.kotlinx.json)
 
   // Kotlin Coroutines
   implementation(libs.kotlinx.coroutines.core)
