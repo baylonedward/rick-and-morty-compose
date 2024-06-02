@@ -32,12 +32,12 @@ import javax.inject.Singleton
 class HttpClientModule {
   @Retention(AnnotationRetention.RUNTIME)
   @Qualifier
-  annotation class InternetClient
+  annotation class RickAndMortyClient
 
-  @InternetClient
+  @RickAndMortyClient
   @Provides
   @Singleton
-  fun provideInternetClient(): HttpClient {
+  fun provideRickAndMortyClient(): HttpClient {
     return HttpClient(OkHttp) {
       // json serialization
       install(ContentNegotiation) {
