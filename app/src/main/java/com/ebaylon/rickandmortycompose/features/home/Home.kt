@@ -35,52 +35,36 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ebaylon.rickandmortycompose.features.character.CharacterListScreen
 import com.ebaylon.rickandmortycompose.features.location.LocationListScreen
+import com.ebaylon.rickandmortycompose.ui.components.TabBarItem
+import com.ebaylon.rickandmortycompose.ui.components.TabView
+import com.ebaylon.rickandmortycompose.ui.navigation.HomeScreens
 import kotlinx.serialization.Serializable
 
 /**
  * Created by: ebaylon.
  * Created on: 6/8/24.
  */
-@Serializable
-sealed class HomeScreens {
-  @Serializable
-  data object ListOfCharacters : HomeScreens()
 
-  @Serializable
-  data object ListOfLocations : HomeScreens()
-
-  @Serializable
-  data object ListOfEpisodes : HomeScreens()
-}
-
-data class TabBarItem(
-  val title: String,
-  val selectedIcon: ImageVector,
-  val unselectedIcon: ImageVector,
-  val screen: HomeScreens,
-  val badgeAmount: Int? = null,
-)
-
-private fun getBottomNavBarItems(): List<TabBarItem> {
+private fun getBottomNavBarItems(): List<TabBarItem<HomeScreens>> {
   return listOf(
     TabBarItem(
       title = "Characters",
       selectedIcon = Icons.Filled.Person,
       unselectedIcon = Icons.Outlined.Person,
-      screen = HomeScreens.ListOfCharacters,
+      route = HomeScreens.ListOfCharacters,
       badgeAmount = 3
     ),
     TabBarItem(
       title = "Location",
       selectedIcon = Icons.Filled.Place,
       unselectedIcon = Icons.Outlined.Place,
-      screen = HomeScreens.ListOfLocations
+      route = HomeScreens.ListOfLocations
     ),
     TabBarItem(
       title = "Episode",
       selectedIcon = Icons.Filled.PlayArrow,
       unselectedIcon = Icons.Outlined.PlayArrow,
-      screen = HomeScreens.ListOfEpisodes
+      route = HomeScreens.ListOfEpisodes
     )
   )
 }
@@ -95,7 +79,12 @@ fun HomeScreen(
 
   Scaffold(
     bottomBar = {
-      TabView(tabBarItems = tabBarItems, navController = navHostController)
+      TabView(
+        tabBarItems = tabBarItems,
+        onTabSelected = { tabBarItem ->
+          navHostController.navigate(tabBarItem.route)
+        }
+      )
     }
   ) {
     Surface(
@@ -123,64 +112,6 @@ fun HomeScreen(
           SampleScreen(text = "List of Episodes")
         }
       }
-    }
-  }
-}
-
-@Composable
-fun TabView(tabBarItems: List<TabBarItem>, navController: NavController) {
-  var selectedTabIndex by rememberSaveable {
-    mutableIntStateOf(0)
-  }
-
-  NavigationBar {
-    // looping over each tab to generate the views and navigation for each item
-    tabBarItems.forEachIndexed { index, tabBarItem ->
-      NavigationBarItem(
-        selected = selectedTabIndex == index,
-        onClick = {
-          selectedTabIndex = index
-          navController.navigate(tabBarItem.screen)
-        },
-        icon = {
-          TabBarIconView(
-            isSelected = selectedTabIndex == index,
-            selectedIcon = tabBarItem.selectedIcon,
-            unselectedIcon = tabBarItem.unselectedIcon,
-            title = tabBarItem.title,
-            badgeAmount = tabBarItem.badgeAmount
-          )
-        },
-        label = { Text(tabBarItem.title) })
-    }
-  }
-}
-
-@Composable
-fun TabBarIconView(
-  isSelected: Boolean,
-  selectedIcon: ImageVector,
-  unselectedIcon: ImageVector,
-  title: String,
-  badgeAmount: Int? = null
-) {
-  BadgedBox(badge = { TabBarBadgeView(badgeAmount) }) {
-    Icon(
-      imageVector = if (isSelected) {
-        selectedIcon
-      } else {
-        unselectedIcon
-      },
-      contentDescription = title
-    )
-  }
-}
-
-@Composable
-fun TabBarBadgeView(count: Int? = null) {
-  if (count != null) {
-    Badge {
-      Text(count.toString())
     }
   }
 }

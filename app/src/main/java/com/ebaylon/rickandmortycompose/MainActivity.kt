@@ -12,14 +12,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import com.ebaylon.rickandmortycompose.features.character.CharacterDetailScreen
 import com.ebaylon.rickandmortycompose.features.home.HomeScreen
-import com.ebaylon.rickandmortycompose.features.home.HomeScreens
 import com.ebaylon.rickandmortycompose.features.location.LocationDetailScreen
 import com.ebaylon.rickandmortycompose.ui.navigation.Screens
 import com.ebaylon.rickandmortycompose.ui.navigation.Transitions
 import com.ebaylon.rickandmortycompose.ui.theme.RickAndMortyComposeTheme
 
 class MainActivity : ComponentActivity() {
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
@@ -36,18 +34,10 @@ class MainActivity : ComponentActivity() {
             navController = navController,
             homeNavController = homeNavController
           ),
-          enterTransition = {
-            Transitions.slideInFromRight()
-          },
-          exitTransition = {
-            Transitions.fadeOut()
-          },
-          popExitTransition = {
-            Transitions.slideOutTowardsRight()
-          },
-          popEnterTransition = {
-            Transitions.slideInFromLeft()
-          }
+          enterTransition = { Transitions.slideInFromRight() },
+          exitTransition = { Transitions.fadeOut() },
+          popExitTransition = { Transitions.slideOutTowardsRight() },
+          popEnterTransition = { Transitions.slideInFromLeft() }
         )
       }
     }
@@ -57,18 +47,6 @@ class MainActivity : ComponentActivity() {
     navController: NavHostController,
     homeNavController: NavHostController
   ): NavGraph {
-
-    /**
-     * Set Home screen to previously shown list
-     * Go back to Home screen
-     */
-    fun onBackFromDetailsScreen(homeScreens: HomeScreens) {
-      // set home screen bottom nav to previously shown list
-      //homeNavController.navigate(homeScreens)
-      // navigate back to home screen
-      navController.popBackStack()
-    }
-
     return navController.createGraph(startDestination = Screens.Home) {
       composable<Screens.Home> {
         HomeScreen(

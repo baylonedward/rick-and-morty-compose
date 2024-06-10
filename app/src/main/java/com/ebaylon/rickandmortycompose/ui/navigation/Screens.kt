@@ -12,11 +12,20 @@ sealed class Screens {
   object Home
 
   @Serializable
-  object ListOfCharacters
-
-  @Serializable
   data class CharacterDetail(val id: Int)
 
   @Serializable
   data class LocationDetail(val id: Int)
+}
+
+@Serializable
+sealed class HomeScreens {
+  @Serializable
+  data object ListOfCharacters : HomeScreens()
+
+  @Serializable
+  data object ListOfLocations : HomeScreens()
+
+  @Serializable
+  data object ListOfEpisodes : HomeScreens()
 }
