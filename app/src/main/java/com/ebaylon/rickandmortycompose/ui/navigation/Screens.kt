@@ -16,4 +16,7 @@ sealed class Screens {
 
   @Serializable
   data class CharacterDetail(val id: Int)
+
+  @Serializable
+  data class LocationDetail(val id: Int)
 }

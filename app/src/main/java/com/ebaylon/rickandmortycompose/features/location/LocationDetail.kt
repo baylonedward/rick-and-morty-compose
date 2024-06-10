@@ -1,4 +1,4 @@
-package com.ebaylon.rickandmortycompose.features.character
+package com.ebaylon.rickandmortycompose.features.location
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
  * Created on: 6/8/24.
  */
 @Composable
-fun CharacterListScreen(
-  onNavigateToCharacterDetail: (characterId: Int) -> Unit
+fun LocationDetailScreen(
+  onBackClick: () -> Unit
 ) {
   Column(
     modifier = Modifier
@@ -27,10 +27,10 @@ fun CharacterListScreen(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    Text(text = "List of Characters")
+    Text(text = "Location Detail")
     Spacer(modifier = Modifier.padding(vertical = 16.dp))
-    Button(onClick = { onNavigateToCharacterDetail(0) }) {
-      Text("Go to Character Detail")
+    Button(onClick = { onBackClick() }) {
+      Text("Go back to List of Locations")
     }
   }
 }

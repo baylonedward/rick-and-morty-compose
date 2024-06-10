@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +17,9 @@ import androidx.compose.ui.unit.dp
  * Created on: 6/8/24.
  */
 @Composable
-fun CharacterDetailScreen() {
+fun CharacterDetailScreen(
+  onBackClick: () -> Unit
+) {
   Column(
     modifier = Modifier
       .padding(16.dp)
@@ -24,7 +27,10 @@ fun CharacterDetailScreen() {
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    Text(text = "CharacterDetail")
+    Text(text = "Character Detail")
     Spacer(modifier = Modifier.padding(vertical = 16.dp))
+    Button(onClick = { onBackClick() }) {
+      Text("Go back to List of Characters")
+    }
   }
 }
