@@ -1,9 +1,9 @@
 package com.ebaylon.rickandmortycompose.data.remote
 
 import com.ebaylon.rickandmortycompose.data.remote.models.ApiEndPoints
-import com.ebaylon.rickandmortycompose.data.remote.models.character.Character
 import com.ebaylon.rickandmortycompose.data.remote.models.NetworkResponse
 import com.ebaylon.rickandmortycompose.data.remote.models.PagedResult
+import com.ebaylon.rickandmortycompose.data.remote.models.character.Character
 import com.ebaylon.rickandmortycompose.di.HttpClientModule
 import com.ebaylon.rickandmortycompose.utils.evaluateRequest
 import io.ktor.client.HttpClient
@@ -19,7 +19,6 @@ import javax.inject.Singleton
 class ApiClient @Inject constructor(
   @HttpClientModule.RickAndMortyClient private val client: HttpClient
 ) {
-
 
   /**
    * Get the paged character result

@@ -4,44 +4,54 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
+import com.ebaylon.rickandmortycompose.features.character.CharacterDetailScreen
+import com.ebaylon.rickandmortycompose.features.character.CharacterListScreen
+import com.ebaylon.rickandmortycompose.features.home.HomeScreen
+import com.ebaylon.rickandmortycompose.ui.navigation.Screens
 import com.ebaylon.rickandmortycompose.ui.theme.RickAndMortyComposeTheme
+import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
+
+  @Serializable
+  object Profile
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     setContent {
+      val navController = rememberNavController()
+
       RickAndMortyComposeTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-          Greeting(
-            name = "Android",
-            modifier = Modifier.padding(innerPadding)
-          )
-        }
+        NavHost(
+          navController = navController,
+          graph = getNavGraph(navController)
+        )
       }
     }
   }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-  Text(
-    text = "Hello $name!",
-    modifier = modifier
-  )
-}
+  private fun getNavGraph(navController: NavController): NavGraph {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-  RickAndMortyComposeTheme {
-    Greeting("Android")
+    return navController.createGraph(startDestination = Screens.Home) {
+      composable<Screens.Home> {
+        HomeScreen(
+          onNavigateToCharacterDetail = { navController.navigate(route = Screens.CharacterDetail(0)) }
+        )
+      }
+      composable<Screens.ListOfCharacters> {
+        CharacterListScreen()
+      }
+      composable<Screens.CharacterDetail> {
+        CharacterDetailScreen()
+      }
+    }
+
   }
 }

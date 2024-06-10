@@ -1,6 +1,8 @@
 package com.ebaylon.rickandmortycompose.utils
 
+import android.os.Bundle
 import android.util.Log
+import androidx.navigation.NavType
 import com.ebaylon.rickandmortycompose.data.remote.models.NetworkResponse
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -10,9 +12,14 @@ import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readBytes
 import io.ktor.http.HttpStatusCode
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.ConnectException
 
+/**
+ * Created by: ebaylon.
+ * Created on: 6/10/24.
+ */
 /**
  * Created by: ebaylon.
  * Created on: 2/9/22.
@@ -93,5 +100,33 @@ suspend inline fun <reified T> evaluateRequest(call: () -> suspend () -> HttpRes
       errorMessage = e.message,
       errorResponse = result
     )
+  }
+}
+
+/**
+ * Created by: ebaylon.
+ * Created on: 6/10/24.*
+ *
+ *Creates a custom NavType for serializable data classes using kotlinx.serialization.
+ * This allows you to pass complex data objects as arguments in Jetpack Compose Navigation.
+ * Params:
+ * T - The type of the serializable data class.
+ * isNullableAllowed - Whether the NavType should allow null values. Defaults to false.
+ * json - The Json instance to use for serialization and deserialization.
+ * Defaults to a standard Json instance.
+ */
+inline fun <reified T : Any> serializableType(
+  isNullableAllowed: Boolean = false,
+  json: Json = Json,
+) = object : NavType<T>(isNullableAllowed = isNullableAllowed) {
+  override fun get(bundle: Bundle, key: String) =
+    bundle.getString(key)?.let<String, T>(json::decodeFromString)
+
+  override fun parseValue(value: String): T = json.decodeFromString(value)
+
+  override fun serializeAsValue(value: T): String = json.encodeToString(value)
+
+  override fun put(bundle: Bundle, key: String, value: T) {
+    bundle.putString(key, json.encodeToString(value))
   }
 }

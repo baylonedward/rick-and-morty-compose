@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * Created on: 5/31/24.
  */
 @Serializable
-data class PagedResult<T> (
+data class PagedResult<T>(
   val info: Info,
   val results: List<T>
 )
