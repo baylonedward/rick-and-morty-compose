@@ -4,13 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
+import com.ebaylon.rickandmortycompose.features.character.CharacterDetailScreen
+import com.ebaylon.rickandmortycompose.features.home.HomeScreen
+import com.ebaylon.rickandmortycompose.features.location.LocationDetailScreen
+import com.ebaylon.rickandmortycompose.ui.navigation.Screens
+import com.ebaylon.rickandmortycompose.ui.navigation.Transitions
 import com.ebaylon.rickandmortycompose.ui.theme.RickAndMortyComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,30 +22,53 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     setContent {
+      // main nav controller
+      val navController = rememberNavController()
+      // bottom nav bar's own nav controller
+      val homeNavController = rememberNavController()
+
       RickAndMortyComposeTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-          Greeting(
-            name = "Android",
-            modifier = Modifier.padding(innerPadding)
-          )
-        }
+        NavHost(
+          navController = navController,
+          graph = getNavGraph(
+            navController = navController,
+            homeNavController = homeNavController
+          ),
+          enterTransition = { Transitions.slideInFromRight() },
+          exitTransition = { Transitions.fadeOut() },
+          popExitTransition = { Transitions.slideOutTowardsRight() },
+          popEnterTransition = { Transitions.slideInFromLeft() }
+        )
       }
     }
   }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-  Text(
-    text = "Hello $name!",
-    modifier = modifier
-  )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-  RickAndMortyComposeTheme {
-    Greeting("Android")
+  private fun getNavGraph(
+    navController: NavHostController,
+    homeNavController: NavHostController
+  ): NavGraph {
+    return navController.createGraph(startDestination = Screens.Home) {
+      composable<Screens.Home> {
+        HomeScreen(
+          navHostController = homeNavController,
+          onCharacterSelected = { characterId ->
+            navController.navigate(Screens.CharacterDetail(characterId))
+          },
+          onLocationSelected = { locationId ->
+            navController.navigate(Screens.LocationDetail(locationId))
+          }
+        )
+      }
+      composable<Screens.CharacterDetail> {
+        CharacterDetailScreen(
+          onBackClick = { navController.popBackStack() }
+        )
+      }
+      composable<Screens.LocationDetail> {
+        LocationDetailScreen(
+          onBackClick = { navController.popBackStack() }
+        )
+      }
+    }
   }
 }
